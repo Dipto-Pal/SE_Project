@@ -1,0 +1,112 @@
+DROP DATABASE IF EXISTS job_manual;
+CREATE DATABASE job_manual;
+USE job_manual;
+
+DROP TABLE IF EXISTS seeker_complain
+DROP TABLE IF EXISTS test_result;
+DROP TABLE IF EXISTS applied_job;
+DROP TABLE IF EXISTS job_post;
+DROP TABLE IF EXISTS job_recruiter;
+DROP TABLE IF EXISTS job_seeker;
+
+CREATE TABLE job_recruiter(
+    recruiter_id int AUTO_INCREMENT,
+    first_name varchar(255), 
+    last_name varchar(255), 
+    user_name varchar(255), 
+    gender varchar(255), 
+    address varchar(500), 
+    contact varchar(13), 
+    email varchar(255), 
+    company_name varchar(255), 
+    pass varchar(255), 
+    status varchar(255),
+    PRIMARY KEY(recruiter_id)
+);
+
+
+
+CREATE TABLE job_post(
+    post_id int AUTO_INCREMENT,
+    recruiter_id int,
+    company_name varchar(255),
+    title varchar(255),
+    tag varchar(255),
+    state_region varchar(255), 
+    job_position varchar(255), 
+    job_type varchar(255), 
+    category varchar(255),
+    post_date_time timestamp,
+    content varchar(255),
+    PRIMARY KEY(post_id),
+    FOREIGN KEY(recruiter_id) REFERENCES job_recruiter(recruiter_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+
+
+CREATE TABLE job_seeker(
+    job_seeker_id int AUTO_INCREMENT,
+    first_name varchar(255), 
+    last_name varchar(255), 
+    user_name varchar(255), 
+    gender varchar(255), 
+    address varchar(500), 
+    contact varchar(13), 
+    email varchar(255), 
+    postal_code varchar(255), 
+    pass varchar(255), 
+    status varchar(255),
+    PRIMARY KEY(job_seeker_id)
+);
+
+
+CREATE TABLE applied_job(
+    apply_id int AUTO_INCREMENT,
+    post_id int,
+    job_seeker_id int,
+    PRIMARY KEY(apply_id),
+    FOREIGN KEY(job_seeker_id) REFERENCES job_seeker(job_seeker_id)ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(post_id) REFERENCES job_post(post_id)ON DELETE CASCADE ON UPDATE CASCADE
+ );
+
+ CREATE TABLE seeker_review_box(
+    seeker_review_id int AUTO_INCREMENT,
+    job_seeker_id int ,
+    email varchar(255),
+    contact int,
+    review_message varchar(1000),
+    PRIMARY KEY(seeker_review_id),
+    FOREIGN KEY(job_seeker_id) REFERENCES job_seeker(job_seeker_id)ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE recruiter_review_box(
+    recruiter_review_id int AUTO_INCREMENT,
+    recruiter_id int ,
+    email varchar(255),
+    contact int,
+    review_message varchar(1000),
+    PRIMARY KEY(recruiter_review_id),
+    FOREIGN KEY(recruiter_id) REFERENCES job_recruiter(recruiter_id)ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE test_result(
+    seeker_id int,
+    test_name varchar(255),
+    marks int,
+    feedback varchar(1000),
+    suggetion varchar(1000),
+    PRIMARY KEY(seeker_id, test_name),
+    FOREIGN KEY(seeker_id) REFERENCES job_seeker(job_seeker_id)ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE seeker_complain(
+  	complain_id int AUTO_INCREMENT,
+    seeker_id int,
+    user_name varchar(255),
+    email varchar(255), 
+    contact varchar(255),
+    complain_details varchar(50000),
+    PRIMARY KEY(complain_id, seeker_id),
+    FOREIGN KEY(seeker_id) REFERENCES job_seeker(job_seeker_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
